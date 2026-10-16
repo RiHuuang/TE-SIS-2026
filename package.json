@@ -1,0 +1,17 @@
+{
+  "name": "sis-2026-engagement-portal",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 3000 --host",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "canvas-confetti": "^1.9.4"
+  },
+  "devDependencies": {
+    "vite": "^6.2.0"
+  }
+}
