@@ -1,5 +1,6 @@
 // SIS 2026 Reactive State Management System with Cross-Window Multi-Screen Synchronization
 const STORAGE_KEY_TEAMS = 'sis_2026_teams_v3';
+const STORAGE_KEY_BACKUP = 'sis_2026_teams_backup_safe';
 const STORAGE_KEY_LOGS = 'sis_2026_logs_v3';
 const STORAGE_KEY_SOUND = 'sis_2026_sound_v3';
 const SESSION_KEY_VIEW = 'sis_2026_active_view_v3';
@@ -117,7 +118,9 @@ class StateStore {
 
   loadTeams() {
     try {
-      const saved = typeof localStorage !== 'undefined' ? localStorage.getItem(STORAGE_KEY_TEAMS) : null;
+      const saved = typeof localStorage !== 'undefined' 
+        ? (localStorage.getItem(STORAGE_KEY_TEAMS) || localStorage.getItem(STORAGE_KEY_BACKUP))
+        : null;
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -146,14 +149,19 @@ class StateStore {
               hasMigration = true;
             }
           });
-          if (hasMigration && typeof localStorage !== 'undefined') {
+          if (typeof localStorage !== 'undefined') {
             localStorage.setItem(STORAGE_KEY_TEAMS, JSON.stringify(parsed));
+            localStorage.setItem(STORAGE_KEY_BACKUP, JSON.stringify(parsed));
           }
           return parsed;
         }
       }
     } catch (e) {
-      console.warn('Failed to parse teams from storage, resetting to defaults.', e);
+      console.warn('Failed to parse teams from storage, checking secondary backup.', e);
+      try {
+        const backup = typeof localStorage !== 'undefined' ? localStorage.getItem(STORAGE_KEY_BACKUP) : null;
+        if (backup) return JSON.parse(backup);
+      } catch (be) {}
     }
     return JSON.parse(JSON.stringify(DEFAULT_TEAMS));
   }
@@ -161,7 +169,9 @@ class StateStore {
   saveTeams(lastAction = null) {
     try {
       if (typeof localStorage !== 'undefined') {
-        localStorage.setItem(STORAGE_KEY_TEAMS, JSON.stringify(this.teams));
+        const json = JSON.stringify(this.teams);
+        localStorage.setItem(STORAGE_KEY_TEAMS, json);
+        localStorage.setItem(STORAGE_KEY_BACKUP, json);
       }
       this.lastAction = lastAction;
       this.broadcast({
@@ -172,6 +182,48 @@ class StateStore {
       });
     } catch (e) {
       console.error('Error saving teams to storage', e);
+    }
+  }
+
+  exportDatabase() {
+    const data = {
+      app: 'SIS 2026 Engagement Portal',
+      version: '1.0',
+      exportedAt: new Date().toISOString(),
+      teams: this.teams,
+      logs: this.logs
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const dateStr = new Date().toISOString().slice(0, 10);
+    a.download = `sis-2026-database-backup-${dateStr}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    this.addLog('Database backup exported to JSON');
+  }
+
+  importDatabase(jsonString) {
+    try {
+      const data = JSON.parse(jsonString);
+      if (!data || !Array.isArray(data.teams)) {
+        throw new Error('Invalid database format. Must contain squads array.');
+      }
+      this.teams = data.teams;
+      if (Array.isArray(data.logs)) {
+        this.logs = data.logs;
+        this.saveLogs();
+      }
+      this.saveTeams({ type: 'DATABASE_IMPORT' });
+      this.addLog(`Database restored from backup (${this.teams.length} squads loaded)`);
+      this.notify({ type: 'DATABASE_IMPORT' });
+      return true;
+    } catch (err) {
+      console.error('Import failed:', err);
+      return false;
     }
   }
 

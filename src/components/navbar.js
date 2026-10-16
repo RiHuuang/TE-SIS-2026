@@ -118,7 +118,7 @@ export class NavbarComponent {
         const view = btn.getAttribute('data-view');
         if (view) {
           if (isDedicatedOp && view !== 'operator') {
-            window.location.href = `/?view=${view}`;
+            window.location.href = `./?view=${view}`;
           } else {
             store.setActiveView(view);
           }
@@ -131,9 +131,9 @@ export class NavbarComponent {
       dualScreenBtn.addEventListener('click', () => {
         sound.playTick();
         if (isDedicatedOp) {
-          window.open('/?view=leaderboard', '_blank', 'width=1400,height=900');
+          window.open('./?view=leaderboard', '_blank', 'width=1400,height=900');
         } else {
-          window.open('/operator.html', '_blank', 'width=1400,height=900');
+          window.open('./operator.html', '_blank', 'width=1400,height=900');
         }
       });
     }

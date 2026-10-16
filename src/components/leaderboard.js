@@ -137,7 +137,7 @@ export class LeaderboardComponent {
     if (btnPop) {
       btnPop.addEventListener('click', () => {
         sound.playTick();
-        window.open('/operator.html', '_blank', 'width=1400,height=900');
+        window.open('./operator.html', '_blank', 'width=1400,height=900');
       });
     }
   }

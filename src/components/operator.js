@@ -130,6 +130,17 @@ export class OperatorComponent {
                   <div class="btn-icon-capsule">${icons.sparkle}</div>
                 </button>
 
+                <button class="btn-secondary-pill btn-sm" id="btnExportDatabase" title="Export database backup file (.json) to save all current scores safely">
+                  <span>EXPORT BACKUP (.JSON)</span>
+                  <div class="btn-icon-capsule">${icons.download}</div>
+                </button>
+
+                <button class="btn-secondary-pill btn-sm" id="btnImportDatabase" title="Import database backup file (.json) to restore scores on any device">
+                  <span>IMPORT BACKUP</span>
+                  <div class="btn-icon-capsule">${icons.upload}</div>
+                </button>
+                <input type="file" id="inputImportDbFile" accept=".json" style="display:none;" />
+
                 <button class="btn-secondary-pill btn-sm" id="btnResetAllScores" title="Reset all squads to 0 PTS">
                   <span>RESET SCORES TO 0</span>
                   <div class="btn-icon-capsule">${icons.refresh}</div>
@@ -272,7 +283,41 @@ export class OperatorComponent {
     if (btnOpenAudience) {
       btnOpenAudience.addEventListener('click', () => {
         sound.playTick();
-        window.open('/?view=leaderboard', '_blank', 'width=1400,height=900');
+        window.open('./?view=leaderboard', '_blank', 'width=1400,height=900');
+      });
+    }
+
+    // Export database backup
+    const btnExport = this.container.querySelector('#btnExportDatabase');
+    if (btnExport) {
+      btnExport.addEventListener('click', () => {
+        sound.playTick();
+        store.exportDatabase();
+      });
+    }
+
+    // Import database backup
+    const btnImport = this.container.querySelector('#btnImportDatabase');
+    const inputImport = this.container.querySelector('#inputImportDbFile');
+    if (btnImport && inputImport) {
+      btnImport.addEventListener('click', () => {
+        inputImport.click();
+      });
+      inputImport.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const success = store.importDatabase(event.target.result);
+          if (success) {
+            sound.playSuccessChime();
+            alert('Database backup restored successfully! All scores have been updated.');
+          } else {
+            alert('Failed to import database file. Please verify it is a valid SIS backup JSON.');
+          }
+          inputImport.value = '';
+        };
+        reader.readAsText(file);
       });
     }
 
