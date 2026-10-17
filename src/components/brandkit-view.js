@@ -53,7 +53,7 @@ export class BrandkitComponent {
                 <span class="board-label">PRIMARY ARTIFACT // 3×3 IDENTITY SYSTEM</span>
                 <span class="board-status font-mono">SPEC: BRANDKIT-V2 // AWWWARDS SPEC</span>
               </div>
-              <a href="/brandkit-board.jpg" target="_blank" class="btn-text-link" id="btnOpenFullBrandkit">
+              <a href="./brandkit-board.jpg" target="_blank" class="btn-text-link" id="btnOpenFullBrandkit">
                 <span>VIEW HIGH-RES IMAGE</span>
                 <div class="btn-icon-capsule">${icons.arrowUpRight}</div>
               </a>
@@ -61,7 +61,7 @@ export class BrandkitComponent {
 
             <div class="brand-image-frame">
               <img 
-                src="/brandkit-board.jpg" 
+                src="./brandkit-board.jpg" 
                 alt="SIS Stand In, Stand together - 3x3 Brandkit Presentation Board" 
                 class="brand-board-img"
                 loading="lazy"
