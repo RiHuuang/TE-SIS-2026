@@ -36,8 +36,7 @@ export class WarpCelebrationEngine {
         </div>
         
         <div class="warp-hero-title">
-          <div class="warp-sub-label">CIPHER DECRYPTED • INFRASTRUCTURE OVERRIDE</div>
-          <h1 class="warp-main-text">SECURITY OVERRIDE<br/><span class="warp-highlight">ACCESS AUTHORIZED</span></h1>
+          <h1 class="warp-main-text"><span class="warp-highlight">SUCCESS</span></h1>
         </div>
 
         <div class="warp-squad-badge" id="warpSquadBadge">

@@ -266,7 +266,7 @@ export class TerminalComponent {
         store.triggerRemoteWarp(team.id, awardedBonus);
         
         const nextBonus = store.getNextCipherBonus();
-        this.setFeedback(`AUTHENTICATION CONFIRMED. OVERRIDE KEY ACCEPTED (+${awardedBonus} PTS). NEXT SQUAD BOUNTY: +${nextBonus} PTS.`, 'success');
+        this.setFeedback('SUCCESS', 'success');
         inputEl.value = '';
 
         // Trigger the spectacular motion graphics warp celebration with awarded bonus

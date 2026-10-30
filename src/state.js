@@ -1,27 +1,27 @@
 // SIS 2026 Reactive State Management System with Cross-Window Multi-Screen Synchronization
-const STORAGE_KEY_TEAMS = 'sis_2026_teams_v3';
-const STORAGE_KEY_BACKUP = 'sis_2026_teams_backup_safe';
-const STORAGE_KEY_LOGS = 'sis_2026_logs_v3';
-const STORAGE_KEY_SOUND = 'sis_2026_sound_v3';
-const SESSION_KEY_VIEW = 'sis_2026_active_view_v3';
+const STORAGE_KEY_TEAMS = 'sis_2026_teams_v4';
+const STORAGE_KEY_BACKUP = 'sis_2026_teams_backup_safe_v4';
+const STORAGE_KEY_LOGS = 'sis_2026_logs_v4';
+const STORAGE_KEY_SOUND = 'sis_2026_sound_v4';
+const SESSION_KEY_VIEW = 'sis_2026_active_view_v4';
 
 // 15 squads with 0 initial points
 const DEFAULT_TEAMS = [
-  { id: 'team-ayam', name: 'AYAM // 01', score: 0, codeCracked: false, color: '#FFFFFF' },
-  { id: 'team-bebek', name: 'BEBEK // 02', score: 0, codeCracked: false, color: '#F4F4F5' },
-  { id: 'team-burunghantu', name: 'BURUNG HANTU // 03', score: 0, codeCracked: false, color: '#E4E4E7' },
-  { id: 'team-gajah', name: 'GAJAH // 04', score: 0, codeCracked: false, color: '#D4D4D8' },
-  { id: 'team-gorilla', name: 'GORILLA // 05', score: 0, codeCracked: false, color: '#A1A1AA' },
-  { id: 'team-harimau', name: 'HARIMAU // 06', score: 0, codeCracked: false, color: '#9CA3AF' },
-  { id: 'team-kambing', name: 'KAMBING // 07', score: 0, codeCracked: false, color: '#71717A' },
-  { id: 'team-katak', name: 'KATAK // 08', score: 0, codeCracked: false, color: '#52525B' },
-  { id: 'team-kucing', name: 'KUCING // 09', score: 0, codeCracked: false, color: '#3F3F46' },
-  { id: 'team-kuda', name: 'KUDA // 10', score: 0, codeCracked: false, color: '#E4E4E7' },
-  { id: 'team-lumbalumba', name: 'LUMBA-LUMBA // 11', score: 0, codeCracked: false, color: '#D4D4D8' },
-  { id: 'team-merak', name: 'MERAK // 12', score: 0, codeCracked: false, color: '#A1A1AA' },
-  { id: 'team-monyet', name: 'MONYET // 13', score: 0, codeCracked: false, color: '#71717A' },
-  { id: 'team-sapi', name: 'SAPI // 14', score: 0, codeCracked: false, color: '#52525B' },
-  { id: 'team-serigala', name: 'SERIGALA // 15', score: 0, codeCracked: false, color: '#FFFFFF' }
+  { id: 'team-kuda', name: 'KUDA // 01', score: 0, codeCracked: false, color: '#FFFFFF' },
+  { id: 'team-simpanse', name: 'SIMPANSE // 02', score: 0, codeCracked: false, color: '#F4F4F5' },
+  { id: 'team-katak', name: 'KATAK // 03', score: 0, codeCracked: false, color: '#E4E4E7' },
+  { id: 'team-ayam', name: 'AYAM // 04', score: 0, codeCracked: false, color: '#D4D4D8' },
+  { id: 'team-harimau', name: 'HARIMAU // 05', score: 0, codeCracked: false, color: '#A1A1AA' },
+  { id: 'team-serigala', name: 'SERIGALA // 06', score: 0, codeCracked: false, color: '#9CA3AF' },
+  { id: 'team-bebek', name: 'BEBEK // 07', score: 0, codeCracked: false, color: '#71717A' },
+  { id: 'team-kucing', name: 'KUCING // 08', score: 0, codeCracked: false, color: '#52525B' },
+  { id: 'team-sapi', name: 'SAPI // 09', score: 0, codeCracked: false, color: '#3F3F46' },
+  { id: 'team-burunghantu', name: 'BURUNG HANTU // 10', score: 0, codeCracked: false, color: '#E4E4E7' },
+  { id: 'team-kambing', name: 'KAMBING // 11', score: 0, codeCracked: false, color: '#D4D4D8' },
+  { id: 'team-gajah', name: 'GAJAH // 12', score: 0, codeCracked: false, color: '#A1A1AA' },
+  { id: 'team-tokek', name: 'TOKEK // 13', score: 0, codeCracked: false, color: '#71717A' },
+  { id: 'team-hamster', name: 'HAMSTER // 14', score: 0, codeCracked: false, color: '#52525B' },
+  { id: 'team-ular', name: 'ULAR // 15', score: 0, codeCracked: false, color: '#FFFFFF' }
 ];
 
 class StateStore {
@@ -124,36 +124,36 @@ class StateStore {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          // Automatic migration mapping for existing saved squads
-          const nameMap = {
-            'AYAM': 'AYAM // 01',
-            'BEBEK': 'BEBEK // 02',
-            'BURUNG HANTU': 'BURUNG HANTU // 03',
-            'GAJAH': 'GAJAH // 04',
-            'GORILLA': 'GORILLA // 05',
-            'HARIMAU': 'HARIMAU // 06',
-            'KAMBING': 'KAMBING // 07',
-            'KATAK': 'KATAK // 08',
-            'KUCING': 'KUCING // 09',
-            'KUDA': 'KUDA // 10',
-            'LUMBA-LUMBA': 'LUMBA-LUMBA // 11',
-            'MERAK': 'MERAK // 12',
-            'MONYET': 'MONYET // 13',
-            'SAPI': 'SAPI // 14',
-            'SERIGALA': 'SERIGALA // 15'
-          };
-          let hasMigration = false;
-          parsed.forEach(t => {
-            if (nameMap[t.name]) {
-              t.name = nameMap[t.name];
-              hasMigration = true;
-            }
-          });
-          if (typeof localStorage !== 'undefined') {
-            localStorage.setItem(STORAGE_KEY_TEAMS, JSON.stringify(parsed));
-            localStorage.setItem(STORAGE_KEY_BACKUP, JSON.stringify(parsed));
-          }
           return parsed;
+        }
+      }
+
+      // Seamless migration from previous version if available
+      if (typeof localStorage !== 'undefined') {
+        const oldSaved = localStorage.getItem('sis_2026_teams_v3') || localStorage.getItem('sis_2026_teams_backup_safe');
+        if (oldSaved) {
+          try {
+            const oldTeams = JSON.parse(oldSaved);
+            if (Array.isArray(oldTeams) && oldTeams.length > 0) {
+              const newTeams = JSON.parse(JSON.stringify(DEFAULT_TEAMS));
+              newTeams.forEach(nt => {
+                const baseName = nt.name.split(' // ')[0].trim().toUpperCase();
+                const matchedOld = oldTeams.find(ot => {
+                  const otBase = (ot.name || '').split(' // ')[0].trim().toUpperCase();
+                  return otBase === baseName;
+                });
+                if (matchedOld) {
+                  nt.score = matchedOld.score || 0;
+                  nt.codeCracked = !!matchedOld.codeCracked;
+                  if (matchedOld.crackedBonus) nt.crackedBonus = matchedOld.crackedBonus;
+                  if (matchedOld.crackedRank) nt.crackedRank = matchedOld.crackedRank;
+                }
+              });
+              localStorage.setItem(STORAGE_KEY_TEAMS, JSON.stringify(newTeams));
+              localStorage.setItem(STORAGE_KEY_BACKUP, JSON.stringify(newTeams));
+              return newTeams;
+            }
+          } catch (me) {}
         }
       }
     } catch (e) {
